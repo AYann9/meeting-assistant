@@ -22,15 +22,18 @@ export async function getMeetings(userId?: string) {
   return data
 }
 
-export async function getMeetingById(id: string) {
+export async function getMeetingById(id: string): Promise<Database['public']['Tables']['meetings']['Row'] | null> {
   const { data, error } = await supabase
     .from('meetings')
     .select('*')
     .eq('id', id)
     .single()
   
-  if (error) throw error
-  return data
+  if (error) {
+    console.error('getMeetingById error:', error)
+    return null
+  }
+  return data as Database['public']['Tables']['meetings']['Row']
 }
 
 export async function createMeeting(meeting: Database['public']['Tables']['meetings']['Insert']) {

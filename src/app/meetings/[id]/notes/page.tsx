@@ -34,7 +34,7 @@ export default function MeetingNotesPage() {
         const data = await getMeetingById(params.id as string)
         if (data) {
           setMeeting(data)
-          const saved = localStorage.getItem(`minutes_${data.id}`)
+          const saved = localStorage.getItem(`minutes_${(data as any).id}`)
           if (saved) {
             setGeneratedMinutes(JSON.parse(saved))
           }
