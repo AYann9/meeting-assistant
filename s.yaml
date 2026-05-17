@@ -6,28 +6,33 @@ vars:
   service:
     name: meeting-assistant
     description: 视频会议助手 - Next.js 应用
+  supabase_url: https://hfxxnshgrozdhrlmebbd.supabase.co
+  supabase_key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhmeHhuc2hncm96ZGhybG1lYmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwMDM1MjUsImV4cCI6MjA5NDU3OTUyNX0.X5GX5CJwHz6kt3EGnGOZGk8FadUnjEyV9ifz2PVWqgA
 
-services:
+resources:
   meeting-assistant:
-    component: fc
+    component: fc3
     props:
       region: ${vars.region}
-      service: ${vars.service}
+      service:
+        name: ${vars.service.name}
+        description: ${vars.service.description}
+        internetAccess: true
       function:
         name: nextjs-app
         description: Next.js 视频会议助手应用
         runtime: custom.debian10
-        codeUri: ./
+        code: ./.next/standalone
         handler: index.handler
-        memorySize: 1024
-        timeout: 60
+        memorySize: 2048
+        timeout: 120
         environmentVariables:
-          NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+          NEXT_PUBLIC_SUPABASE_URL: ${vars.supabase_url}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${vars.supabase_key}
         customRuntimeConfig:
           command:
             - node
-            - server/index.js
+            - server.js
           port: 9000
       triggers:
         - name: httpTrigger
