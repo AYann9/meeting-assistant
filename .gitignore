@@ -17,6 +17,9 @@
 # Vercel
 .vercel
 
+# Serverless Devs
+.s
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

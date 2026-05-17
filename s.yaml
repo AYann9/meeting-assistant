@@ -1,0 +1,55 @@
+edition: 3.0.0
+name: meeting-assistant
+access: default
+vars:
+  region: cn-shanghai
+  service:
+    name: meeting-assistant
+    description: 视频会议助手 - Next.js 应用
+
+services:
+  meeting-assistant:
+    component: fc
+    props:
+      region: ${vars.region}
+      service: ${vars.service}
+      function:
+        name: nextjs-app
+        description: Next.js 视频会议助手应用
+        runtime: custom.debian10
+        codeUri: ./
+        handler: index.handler
+        memorySize: 1024
+        timeout: 60
+        environmentVariables:
+          NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+        customRuntimeConfig:
+          command:
+            - node
+            - server/index.js
+          port: 9000
+      triggers:
+        - name: httpTrigger
+          type: http
+          config:
+            authType: anonymous
+            methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - HEAD
+              - OPTIONS
+      customDomain:
+        domainName: auto
+        protocol: HTTP
+        routeConfigs:
+          - path: /*
+            methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - HEAD
+              - OPTIONS
